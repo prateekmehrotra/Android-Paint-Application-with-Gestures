@@ -17,6 +17,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * This class contains the attributes for the main layout of
+ * our application.
+ * @author PrateekMehrotra
+ *
+ */
 @SuppressLint("NewApi")
 public class CustomViewForDrawing extends View{
 
@@ -51,19 +57,37 @@ public class CustomViewForDrawing extends View{
 	public static int selectedColor;
 
 
-
+	/**
+	 * The constructor for CustomViewForDrawing
+	 * This constructor calls the setupDrawing()
+	 * method. This constructor is called only 
+	 * once when the application layout is first
+	 * created upon launch.
+	 * @param context
+	 * @param attrs
+	 */
 	public CustomViewForDrawing(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
 		System.out.println("customviewfordrawing constructor");
 		setUpDrawing();
 	}
-
+	
+	/**
+	 * This function returns the current canvas
+	 * being worked upon by the user. 
+	 * @return drawCanvas the current canvas being 
+	 * worked upon by the user
+	 */
 	public Canvas getCanvas()
 	{
 		return drawCanvas;
 	}
-
+	
+	/**
+	 * This method initializes the attributes of the 
+	 * CustomViewForDrawing class.
+	 */
 	public void setUpDrawing(){
 		System.out.println("setup drawing");
 		drawPaint = new Paint();;
@@ -83,7 +107,7 @@ public class CustomViewForDrawing extends View{
 		prevBrushSize = brushSize;
 		//selectedColor = getResources().getColor(Color.CYAN);
 	}
-
+	
 	@Override
 	protected void onSizeChanged(int w, int h, int wprev, int hprev){
 		super.onSizeChanged(w, h, wprev, hprev);
@@ -91,7 +115,11 @@ public class CustomViewForDrawing extends View{
 		canvasBitmap = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888);
 		drawCanvas = new Canvas(canvasBitmap);
 	}
-
+	
+	/**
+	 * This method is called when a stroke is drawn on the canvas
+	 * as a part of the painting.
+	 */
 	@Override
 	protected void onDraw(Canvas canvas){
 		System.out.println("onDraw");
@@ -109,7 +137,11 @@ public class CustomViewForDrawing extends View{
 			canvas.drawPath(drawPath, drawPaint);
 		}
 	}
-
+	
+	/**
+	 * This method acts as an event listener when a touch
+	 * event is detected on the device.
+	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		System.out.println("ontouchevent");
@@ -158,7 +190,13 @@ public class CustomViewForDrawing extends View{
 		invalidate();
 		return true;
 	}
-
+	
+	/**
+	 * This function is called when the user selects the undo
+	 * command from the application. This function removes the 
+	 * last stroke input by the user depending on the 
+	 * number of times undo has been activated.
+	 */
 	public void onClickUndo () {
 		if (paths.size()>0)  {
 
@@ -168,7 +206,14 @@ public class CustomViewForDrawing extends View{
 			Log.i("undo", "Undo elsecondition");
 		}          
 	}
-
+	
+	/**
+	 * This function is called when the user selects the redo
+	 * command from the application. This function redoes the 
+	 * last stroke undone by the user depending on the 
+	 * number of times redo has been activated.Max number of
+	 * redo depends on the number of undo's activated by the user.
+	 */
 	public void onClickRedo (){
 		if (undonePaths.size()>0)  {
 			paths.add(undonePaths.remove(undonePaths.size()-1));
@@ -179,7 +224,11 @@ public class CustomViewForDrawing extends View{
 		}          
 	}
 
-
+	/**
+	 * This function is called when the user desires a color change.
+	 * This functions sets the paintColor object of CustomViewForDrawing.
+	 * @param newColor
+	 */
 	public void setColor(String newColor){
 		System.out.println("setcolor");
 		//invalidate();
@@ -187,29 +236,56 @@ public class CustomViewForDrawing extends View{
 		paintColor = Color.parseColor(newColor);
 		drawPaint.setColor(paintColor);
 	}
-
+	
+	/**
+	 * This function returns the current color that has been 
+	 * selected.
+	 * @return current color
+	 */
 	public int getColor()
 	{
 		return paintColor;
 	}
-
+	
+	/**This method is called when either the brush or the eraser
+	* sizes are to be changed. This method sets the brush/eraser 
+	* sizes to the new values depending on user selection.
+	*/
 	public void setSizeForBrush(float newSize){
 		System.out.println("setsizeforbrush");
 		float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSize, getResources().getDisplayMetrics());
 		brushSize = pixelAmount;
 		drawPaint.setStrokeWidth(brushSize);
 	}
-
+	
+	/**
+	 * This functions sets the previous brush 
+	 * size upon brush size change.
+	 * @param prevSize
+	 */
 	public void setPrevBrushSize(float prevSize){
 		System.out.println("prevsize");
 		prevBrushSize = prevSize;
 	}
-
+	
+	/**
+	 * This function is called when the brush size 
+	 * is changed by the user. This function returns
+	 * previous brush size used prior to brush size 
+	 * change
+	 * @return
+	 */
 	public float getPrevBrushSize(){
 		System.out.println("getprevbrushsize");
 		return prevBrushSize;
 	}
-
+	
+	/**
+	 * This function sets the paint color
+	 * to white when eraser functionality is 
+	 * selected by the user. 
+	 * @param bErase
+	 */
 	public void setErase(boolean bErase){
 		System.out.println("setErase");
 		erase = bErase;
@@ -222,7 +298,13 @@ public class CustomViewForDrawing extends View{
 		else
 			drawPaint.setXfermode(null);
 	}
-
+	
+	/**
+	 * This function is called when the new file
+	 * functionality is enabled by the user. This
+	 * function reinitializes the CustomViewForDrawing
+	 * attributes when a new canvas is produced.
+	 */
 	public void newStart(){
 		System.out.println("newstart");
 		drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);

@@ -39,9 +39,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+/**
+ * This is the activity class that serves as the main entry point to the 
+ * app's user interface. This class contains the onCreate() method along
+ * with some other methods. The onCreate() method is called by the system 
+ * when the application is launched from the device home screen. 
+ * This class is defined to be used as the main activity in the Android 
+ * manifest file, AndroidManifest.xml, which is at the root of 
+ * the project directory. In the manifest, this class is declared with an
+ * <intent-filter> that includes the MAIN action and LAUNCHER category.
+ * If either the MAIN action or LAUNCHER category are not declared for one 
+ * of the activities, then the application icon will not appear in the Home 
+ * screen's list of app's.
+ * @author PrateekMehrotra
+ *
+ */
 @SuppressLint("NewApi")
-
-
 public class MainActivity extends Activity implements OnClickListener,ColorPickerDialog.OnColorChangedListener,OnGesturePerformedListener {
 
 	private CustomViewForDrawing drawView;
@@ -56,7 +69,7 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 	private static final String COLOR_PREFERENCE_KEY = "color";
 	GestureLibrary mLibrary;
 	//boolean gestureDetected = false;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println("oncreate");
@@ -126,6 +139,11 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 		gestureBtn.setOnClickListener(this);
 	}
 
+	/**
+	 * This method is called when a gesture is input from the gesture
+	 * view. This method defines the logic for gesture matching using
+	 * prediction scores returned by the Gesture Builder API.
+	 */
 	@Override
 	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture)
 	{
@@ -252,6 +270,12 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 		}
 	}
 
+	/**
+	 * This method is called first when the eraser functionality is activated 
+	 * by the user. This method is responsible for displaying a dialog box
+	 * showing various eraser sizes for the user to choose from. This method 
+	 * also defines the OnClickListener functions for each of the eraser sizes.
+	 */
 	public void eraseDraw(){
 		System.out.println("when erase is clicked");
 		final Dialog brushDialog = new Dialog(this);
@@ -290,6 +314,14 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 	}
 	//Gesture Overlay View Change 03/10/2013
 	//Overloaded for saving images when edited through gesture overlay
+	/**
+	 * This method is called when the user enables the save functionality.
+	 * This method pops a dialog box asking a confirmation from the user of
+	 * the desired functionality. If the user selects "yes" then saveDrawing()
+	 * method is called by the "yes" button event listener to save the current 
+	 * image into device gallery.
+	 * @param bitmap Bitmap of current image
+	 */
 	public void saveDrawing(final Bitmap bitmap)
 	{
 		AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
@@ -307,7 +339,15 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 		});
 		saveDialog.show();
 	}
-
+	
+	/**
+	 * This method is called when the new drawing functionality is 
+	 * enabled by the user. This function pops a dialog box to get 
+	 * a confirmation on the desired functionality. If "yes" is 
+	 * selected from the dialog box, the canvas is cleared, the
+	 * previous drawing is removed, and the canvas object is
+	 * re-initialized to its original state.
+	 */
 	public void newDrawing()
 	{
 		//new button
@@ -330,7 +370,12 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 		});
 		newDialog.show();
 	}
-
+	
+	/**
+	 * This method is called when the user selects "yes" from the save
+	 * dialog box. This method saves the current image on which the user 
+	 * is working to the device gallery.
+	 */
 	public void saveDrawing()
 	{
 
@@ -390,7 +435,13 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 		});
 		saveDialog.show();
 	}
-
+	
+	/**
+	 * This method is called when the user desires to change the color
+	 * to paint with. This method then sets the color object of the
+	 * view to the newly selected color.
+	 * @param color Desired Color 
+	 */
 	@Override
 	public void colorChanged(int color) {
 		PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(
@@ -400,8 +451,11 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 		System.out.println(Color.parseColor("#" + i.toHexString(color)));
 		drawView.setColor("#" + i.toHexString(color));
 	}
-
-
+	
+	/**
+	 * This method is called to initialize the options menu in
+	 * the action bar.
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		System.out.println("oncreateoptionsmenu");
@@ -409,7 +463,11 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
+	
+	/**
+	 * This method is called when an item is selected from the options
+	 * menu in the actions bar.
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		// same as using a normal menu
@@ -428,7 +486,11 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 		}
 		return true;
 	}
-
+	
+	/**
+	 * This method is called when the user desires to load an existing 
+	 * image from device gallery into the application.
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -481,17 +543,37 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 			drawView.setVisibility(View.VISIBLE);
 		}
 	}
-
+	
+	/**
+	 * This method is used to return the current status of the drawView
+	 * @return drawView the current status of the drawView
+	 */
 	public CustomViewForDrawing getDrawView()
 	{
 		return drawView;
 	}
-
+	
+	/**
+	 * This method is called to display a toast message on device
+	 * screen.
+	 * @param message
+	 */
 	public void makeToast(String message) {
 		// with jam obviously
 		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
-
+	
+	/**
+	 * This function is called when the user desires to change
+	 * the brush thickness that is being used to draw on  the 
+	 * canvas. This function pops a dialog box asking the user
+	 * to select a particular brush thickness. When the user 
+	 * makes a selection, the event listener for each brush
+	 * thickness is defined in this method which sets the 
+	 * brush thickness object with the newly chosen brush 
+	 * thickness.
+	 * @param view
+	 */
 	//user clicks on paint
 	public void paintClicked(View view){
 		System.out.println("paintclicked");
@@ -509,7 +591,11 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 			currPaint = (ImageButton)view;
 		}
 	}
-
+	
+	/**
+	 * This function defines all the event listeners for the 
+	 * icons in the main layout of the application.
+	 */
 	@Override
 	public void onClick(View v) 
 	{
@@ -632,7 +718,6 @@ public class MainActivity extends Activity implements OnClickListener,ColorPicke
 			int color = drawView.getColor();
 			drawView.getCanvas().drawColor(color);
 			drawView.invalidate();
-
 			//paintClicked(drawView);
 
 		}
